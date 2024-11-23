@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,  user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="通过我们的增强型代理服务，轻松下载文件。输入文件URL，通过我们的服务器代理进行安全下载。复制代理URL，享受便捷的下载体验。">
+    <meta name="keywords" content="代理下载, 安全文件下载, 通过代理下载, URL下载服务, 服务器代理下载, 简单文件访问, 在线下载文件, 复制代理URL, 安全在线下载, 文件下载服务">
+    <link rel="manifest" href="/manifest.webmanifest" type="application/manifest+json">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Proxy Download</title>
+    <style>
+        /* 页面样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://io.onenov.cn/file/202411160144879.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        /* 卡片容器样式 */
+        .card {
+            background: rgba(255, 255, 255, 0.8); /* 半透明白色 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 阴影 */
+            border-radius: 16px; /* 圆角 */
+            padding: 20px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            backdrop-filter: blur(25px); /* 模糊效果 */
+        }
+
+        /* 标题样式 */
+        h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* 使用说明样式 */
+        .instructions {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        /* 文本框样式 */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            resize: none;
+        }
+
+        /* 按钮容器样式 */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        /* 按钮样式 */
+        button {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #1c86ee;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1e90ff;
+        }
+
+        /* 复制按钮样式 */
+        .copy-button {
+            background-color: #007BFF;
+            display: none; /* 初始隐藏状态 */
+        }
+
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Proxy Download</h1>
+        <div class="instructions" id="instructions">
+            使用说明：<br>
+            1. 在下方的文本框中输入要下载的文件的完整URL。<br>
+            2. 点击“下载”按钮，通过我们的服务器代理下载资源。<br>
+            3. 或者直接使用GET请求：<br>
+               <code id="directGetRequestUrl">/download?url={ORIGINAL_FILE_URL}</code><br>
+            4. 如果您想复制代理下载的URL，请点击“复制”按钮。
+        </div>
+        <form id="downloadForm" method="GET" action="/download">
+            <textarea name="url" id="url" rows="3" placeholder="文件URL" required></textarea>
+            <div class="button-container">
+                <button type="submit">下载</button>
+                <button type="button" class="copy-button" id="copyButton">复制</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Update the instructions with the current origin
+        document.getElementById('directGetRequestUrl').textContent = `${window.location.origin}/download?url={ORIGINAL_FILE_URL}`;
+
+        const urlInput = document.getElementById('url');
+        const copyButton = document.getElementById('copyButton');
+
+        // Toggle the visibility of the copy button based on input
+        urlInput.addEventListener('input', () => {
+            const url = urlInput.value.trim();
+            if (url) {
+                copyButton.style.display = 'block'; // 显示复制按钮
+            } else {
+                copyButton.style.display = 'none'; // 隐藏复制按钮
+            }
+        });
+
+        copyButton.addEventListener('click', () => {
+            const originalURL = urlInput.value.trim();
+            if (originalURL) {
+                const proxiedURL = `${window.location.origin}/download?url=${encodeURIComponent(originalURL)}`;
+                navigator.clipboard.writeText(proxiedURL).then(() => {
+                    alert('Proxy URL copied to clipboard!');
+                }).catch((err) => {
+                    alert('Failed to copy Proxy URL: ' + err);
+                });
+            } else {
+                alert('Please enter a URL first.');
+            }
+        });
+    </script>
+</body>
+</html>
